@@ -32,9 +32,9 @@
     **Status**: 200
     
     **Request Parameter**:
-    {
+    `{
       "movie_name": "The Wizard of Oz"
-    }
+    }`
 
     **Success response**:
     {
