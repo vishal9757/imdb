@@ -4,7 +4,7 @@
 
     **Description**: This endpoint is to get Bearer API token
 
-    **Path**: `/create_user
+    **Path**: /create_user
 
     **Method**: GET
 
@@ -25,7 +25,7 @@
 
     **Description**: This endpoint retrieves the search movie result
 
-    **Path**: `/search_movie
+    **Path**: /search_movie
 
     **Method**: GET
 
@@ -54,7 +54,7 @@
 
     **Description**: This endpoint is to add new movie entry in Database (needs Admin access)
 
-    **Path**: `/add_movie
+    **Path**: /add_movie
 
     **Method**: POST
 
@@ -84,7 +84,7 @@
 4. Update Movie
     **Description**: This endpoint is to update movie record (needs Admin access)
 
-    **Path**: `/update_movie
+    **Path**: /update_movie
 
     **Method**: PUT
 
@@ -115,7 +115,7 @@
 5. Remove Movie
     **Description**: This endpoint is to delete movie record (needs Admin access)
 
-    **Path**: `/remove_movie
+    **Path**: /remove_movie
 
     **Method**: DELETE
 
