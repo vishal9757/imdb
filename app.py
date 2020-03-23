@@ -15,12 +15,12 @@ from flask_jwt_extended import (
 import services
 import authenticate
 
-APP_NAME = Flask(__name__)
-APP_NAME.config['JWT_SECRET_KEY'] = os.environ['SECRET_KEY']
-JWT = JWTManager(APP_NAME)
+app = Flask(__name__)
+app.config['JWT_SECRET_KEY'] = os.environ['SECRET_KEY']
+JWT = JWTManager(app)
 
 
-@APP_NAME.route('/')
+@app.route('/')
 def hello_world():
     """
     Home endpoint
@@ -28,7 +28,7 @@ def hello_world():
     return 'Hello, World!'
 
 
-@APP_NAME.route('/create_user', methods=['GET'])
+@app.route('/create_user', methods=['GET'])
 def create_user():
     """
     Endpoint to create user
@@ -40,7 +40,7 @@ def create_user():
     return Response(response_body, status=200, mimetype='application/json')
 
 
-@APP_NAME.route('/create_admin', methods=['GET'])
+@app.route('/create_admin', methods=['GET'])
 def create_admin():
     """
     Endpoint to create admin user
@@ -57,7 +57,7 @@ def create_admin():
     return Response(response_body, status=422, mimetype='application/json')
 
 
-@APP_NAME.route('/search_movie', methods=['GET'])
+@app.route('/search_movie', methods=['GET'])
 @jwt_required
 def search_movie():
     """
@@ -71,7 +71,7 @@ def search_movie():
     return Response(json.dumps(movie_data), status=200, mimetype='application/json')
 
 
-@APP_NAME.route('/add_movie', methods=['POST'])
+@app.route('/add_movie', methods=['POST'])
 @jwt_required
 def add_movie_endpoint():
     """
@@ -91,7 +91,7 @@ def add_movie_endpoint():
     return Response(response_body, status=resp_status, mimetype='application/json')
 
 
-@APP_NAME.route('/update_movie', methods=['PUT'])
+@app.route('/update_movie', methods=['PUT'])
 @jwt_required
 def update_movie_endpoint():
     """
@@ -112,7 +112,7 @@ def update_movie_endpoint():
     return Response(response_body, status=resp_status, mimetype='application/json')
 
 
-@APP_NAME.route('/remove_movie', methods=['DELETE'])
+@app.route('/remove_movie', methods=['DELETE'])
 @jwt_required
 def remove_movie_endpoint():
     """
@@ -132,4 +132,4 @@ def remove_movie_endpoint():
 
 if __name__ == '__main__':
     port = int(os.environ['PORT'])
-    APP_NAME.run(port=port, host='0.0.0.0')
+    app.run(port=port, host='0.0.0.0')
