@@ -37,7 +37,7 @@
     }`
 
     **Success response**:
-    {
+    `{
       "99popularity" : 83,
       "director" : "Victor Fleming",
       "genre" : [
@@ -48,7 +48,7 @@
       ],
       "imdb_score" : 8.3,
       "name" : "The Wizard of Oz"
-    }
+    }`
 
 3. Add Movie
 
