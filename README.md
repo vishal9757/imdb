@@ -11,14 +11,14 @@
     **Status**: 200
     
     **Request Parameter**:
-    {
+    `{
       "user_name": "XYZ0"
-    }
+    }`
 
     **Success response**:
-    {
+    `{
       "api_key": Token
-    }
+    }`
 
 
 2. Search Movie
@@ -60,9 +60,9 @@
 
     **Status**: 200
     
-    **Request Parameter**:
-    {
-      "movie_data": {
+    **Request Parameter** (movie_data json should be string encoded):
+    `{
+      "movie_data": "{
         "99popularity": 83,
         "director": "Victor Fleming",
         "genre": [
@@ -73,13 +73,13 @@
         ],
         "imdb_score": 8.3,
         "name": "The Wizard of Oz"
-      }
-    }
+      }"
+    }`
 
     **Success response**:
-    {
+    `{
       "msg" : "Successfully Inserted"
-    }
+    }`
   
 4. Update Movie
     **Description**: This endpoint is to update movie record (needs Admin access)
@@ -90,10 +90,10 @@
 
     **Status**: 200
     
-    **Request Parameter**:
-    {
+    **Request Parameter** (movie_data json should be string encoded):
+    `{
       "movie_name": "The Wizard of Oz",
-      "movie_data": {
+      "movie_data": "{
           "99popularity": 83,
           "director": "Victor Fleming",
           "genre": [
@@ -104,8 +104,8 @@
           ],
           "imdb_score": 8.3,
           "name": "The Wizard of Oz"
-        }
-    }
+        }"
+    }`
 
     **Success response**:
     {
@@ -122,11 +122,11 @@
     **Status**: 200
     
     **Request Parameter**:
-    {
+    `{
       "movie_name" : "The Wizard of Oz"
-    }
+    }`
 
     **Success response**:
-    {
+    `{
       "msg" : "Removed"
-    }
+    }`
