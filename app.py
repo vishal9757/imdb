@@ -68,6 +68,8 @@ def search_movie():
         response_body = services.get_response_body(msg="Invalid entry")
         return Response(response_body, status=422, mimetype='application/json')
     movie_data = services.get_movie_data(movie_name)
+    print ("request_param "+ str(ovie_data))
+    print (str(response_body))
     return Response(json.dumps(movie_data), status=200, mimetype='application/json')
 
 
@@ -87,7 +89,9 @@ def add_movie_endpoint():
         return Response(response_body, status=422, mimetype='application/json')
     movie_data = json.loads(movie_data)
     resp_status, resp_msg = services.insert_movie(movie_data)
+    print ("request_param "+ str(movie_data))
     response_body = services.get_response_body(msg=resp_msg)
+    print (str(response_body))
     return Response(response_body, status=resp_status, mimetype='application/json')
 
 
@@ -108,7 +112,9 @@ def update_movie_endpoint():
         return Response(response_body, status=422, mimetype='application/json')
     movie_data = json.loads(movie_data)
     resp_status, resp_msg = services.update_movie(movie_name, movie_data)
+    print ("request_param "+ str(movie_data), str(movie_name))
     response_body = services.get_response_body(msg=resp_msg)
+    print (str(response_body))
     return Response(response_body, status=resp_status, mimetype='application/json')
 
 
@@ -119,6 +125,7 @@ def remove_movie_endpoint():
     Endpoint to delete movie entry for db
     """
     user_data = get_jwt_identity()
+    print ("Endpoint")
     if not user_data.get('admin'):
         response_body = services.get_response_body(msg="Unauthorized access")
         return Response(response_body, status=401, mimetype='application/json')
@@ -128,6 +135,8 @@ def remove_movie_endpoint():
         return Response(response_body, status=422, mimetype='application/json')
     resp_status, resp_msg = services.delete_movie(movie_name)
     response_body = services.get_response_body(msg=resp_msg)
+    print ("search_param "+str(movie_name))
+    print (str(response_body))
     return Response(response_body, status=resp_status, mimetype='application/json')
 
 if __name__ == '__main__':
