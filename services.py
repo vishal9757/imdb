@@ -39,7 +39,7 @@ def insert_movie(movie_data):
         client[config.MOVIE_DB][config.MOVIE_COLLECTION].insert_one(movie_data)
         return 200, "Successfully Inserted"
     except pymongo.errors.DuplicateKeyError as error_msg:
-        return 200, str(error_msg)
+        return 422, str(error_msg)
 
 
 def update_movie(movie_name, movie_data):
