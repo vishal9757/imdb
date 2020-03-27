@@ -7,13 +7,14 @@ load_dotenv()
 import os
 import json
 import datetime
-from flask import (Flask, Response, request)
+from flask import (Flask, Response, request, abort)
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
     get_jwt_identity
 )
 import services
 import authenticate
+import schema_check
 
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = os.environ['SECRET_KEY']
@@ -33,7 +34,11 @@ def create_user():
     """
     Endpoint to create user
     """
-    user = request.values.get('user_name')
+    user = request.json.get('user_name')
+    create_user_schema = schema_check.CreateUserInputSchema()
+    errors = create_user_schema.validate(request.json)
+    if errors:
+        return Response(str(errors), status=422, mimetype='application/json')
     access_token = create_access_token({"user_name": user, "admin": False},
                                        expires_delta=datetime.timedelta(hours=2))
     response_body = services.get_response_body(api_key=access_token)
@@ -63,13 +68,12 @@ def search_movie():
     """
     Endpoint to search movie
     """
-    movie_name = request.values.get('movie_name')
-    if not movie_name:
-        response_body = services.get_response_body(msg="Invalid entry")
-        return Response(response_body, status=422, mimetype='application/json')
+    search_movie_scheme = schema_check.SearchMovieInputScheme()
+    errors = search_movie_scheme.validate(request.json)
+    if errors:
+        return Response(str(errors), status=422, mimetype='application/json')
+    movie_name = request.json.get('movie_name')
     movie_data = services.get_movie_data(movie_name)
-    print ("request_param "+ str(ovie_data))
-    print (str(response_body))
     return Response(json.dumps(movie_data), status=200, mimetype='application/json')
 
 
@@ -79,19 +83,17 @@ def add_movie_endpoint():
     """
     Endpoint to add new movie entry
     """
+    add_movie_scheme = schema_check.AddMovieInputScheme()
+    errors = add_movie_scheme.validate(request.json)
+    if errors:
+        return Response(str(errors), status=422, mimetype='application/json')
     user_data = get_jwt_identity()
     if not user_data.get('admin'):
         response_body = services.get_response_body(msg="Unauthorized access")
         return Response(response_body, status=401, mimetype='application/json')
-    movie_data = request.values.get('movie_data')
-    if not movie_data:
-        response_body = services.get_response_body(msg="Invalid entry")
-        return Response(response_body, status=422, mimetype='application/json')
-    movie_data = json.loads(movie_data)
+    movie_data = request.json.get('movie_data')
     resp_status, resp_msg = services.insert_movie(movie_data)
-    print ("request_param "+ str(movie_data))
     response_body = services.get_response_body(msg=resp_msg)
-    print (str(response_body))
     return Response(response_body, status=resp_status, mimetype='application/json')
 
 
@@ -101,20 +103,21 @@ def update_movie_endpoint():
     """
     Endpoint to update movie entry
     """
+    update_movie_scheme = schema_check.UpdateMovieInputScheme()
+    errors = update_movie_scheme.validate(request.json)
+    if errors:
+        return Response(str(errors), status=422, mimetype='application/json')
     user_data = get_jwt_identity()
     if not user_data.get('admin'):
         response_body = services.get_response_body(msg="Unauthorized access")
         return Response(response_body, status=401, mimetype='application/json')
-    movie_name = request.values.get('movie_name')
-    movie_data = request.values.get('movie_data')
+    movie_name = request.json.get('movie_name')
+    movie_data = request.json.get('movie_data')
     if not movie_data or not movie_name:
         response_body = services.get_response_body(msg="Invalid entry")
         return Response(response_body, status=422, mimetype='application/json')
-    movie_data = json.loads(movie_data)
     resp_status, resp_msg = services.update_movie(movie_name, movie_data)
-    print ("request_param "+ str(movie_data), str(movie_name))
     response_body = services.get_response_body(msg=resp_msg)
-    print (str(response_body))
     return Response(response_body, status=resp_status, mimetype='application/json')
 
 
@@ -124,21 +127,19 @@ def remove_movie_endpoint():
     """
     Endpoint to delete movie entry for db
     """
+    remove_movie_scheme = schema_check.RemoveMovieInputScheme()
+    errors = remove_movie_scheme.validate(request.json)
+    if errors:
+        return Response(str(errors), status=422, mimetype='application/json')
     user_data = get_jwt_identity()
-    print ("Endpoint")
     if not user_data.get('admin'):
         response_body = services.get_response_body(msg="Unauthorized access")
         return Response(response_body, status=401, mimetype='application/json')
-    movie_name = request.values.get('movie_name')
-    if not movie_name:
-        response_body = services.get_response_body(msg="Invalid entry")
-        return Response(response_body, status=422, mimetype='application/json')
+    movie_name = request.json.get('movie_name')
     resp_status, resp_msg = services.delete_movie(movie_name)
     response_body = services.get_response_body(msg=resp_msg)
-    print ("search_param "+str(movie_name))
-    print (str(response_body))
     return Response(response_body, status=resp_status, mimetype='application/json')
 
 if __name__ == '__main__':
     port = int(os.environ['PORT'])
-    app.run(port=port, host='0.0.0.0')
+    app.run(port=port, host='0.0.0.0', debug=True)
